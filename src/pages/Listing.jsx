@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/swiper-bundle.css'
 import { getDoc, doc } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { db } from '../firebase.config'
 import Spinner from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
-
-
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const Listing = () => {
     const [listing, setListing] = useState(null)
@@ -40,7 +44,30 @@ const Listing = () => {
 
     return (
         <main>
-           {/* {slider} */}
+
+        <Swiper 
+
+            modules={[Navigation, Pagination]}
+            slidesPerView={1} 
+            pagination={{clickable: true}}
+            navigation
+            scrollbar={{ dragable: true }}
+            style={{ height: "500px" }}>
+            {listing.imageUrls.map((url, index) => (
+                <SwiperSlide key={index}>
+                    <div 
+                        style={{background: `url(${listing.imageUrls[index]})
+                        center no-repeat`,
+                        backgroundSize:'cover',
+                        minHeight: "20rem"}} 
+                        className="swiperSlideDiv">
+
+                    </div>
+                </SwiperSlide>
+            ))}
+        </Swiper>
+
+        
             <div className='shareIconDiv' onClick={() => {
                 navigator.clipboard.writeText(window.location.href)
                 setShareLinkCopied(true)
@@ -64,7 +91,7 @@ const Listing = () => {
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 </p>
 
-                <p className="listingLocation">{Listing.location}</p>
+                <p className="listingLocation">{listing.location}</p>
                 <p className="listingType">
                     For {listing.type === 'rent' ? 'Rent' : 'Sale' }
                 </p>
@@ -90,6 +117,20 @@ const Listing = () => {
                     <li>{listing.furnished && 'Furnished Spot'}</li>
                 </ul>
                 <p className="listingLocationTitle">Location</p>
+
+                <div className="leafletContainer">
+                    <MapContainer style={{height: '100%', width:'100%'}}
+                    center={[listing.geolocation.lat, listing.geolocation.lng]}
+                    zoom={13} scrollWheelZoom={false}>
+                        <TileLayer
+                            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url='https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png'/>
+
+                        <Marker position={[listing.geolocation.lat, listing.geolocation.lng]}>
+                            <Popup>{listing.location}</Popup>
+                        </Marker>
+                    </MapContainer>
+                </div>
 
                 {auth.currentUser?.uid !== listing.useRef && (
                     <Link to={`/contact/${listing.useRef}?listingName=$

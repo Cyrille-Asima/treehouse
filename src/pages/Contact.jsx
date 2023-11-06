@@ -29,6 +29,8 @@ const Contact = () => {
         getLandlord()
         }, [params.landlordId])
 
+        const onChange = (e) => setMessage(e.target.value)
+
 
 
 
@@ -44,6 +46,23 @@ const Contact = () => {
                     <div className='contactLandlord'>
                         <p className='landlordName'>Contact {landlord?.name}</p>
                     </div>
+
+                    <form className="messageForm">
+                        <div className="messageDiv">
+                            <label htmlFor="message" className='messageLabel'>
+                                Message
+                            </label>
+                            <textarea name="message" id="message" className='textarea'
+                            value={message} onChange={onChange}>
+                            </textarea>
+                        </div>
+                        <a href={`mailto:${landlord.email}?Subject
+                        =${searchParams.get('listingName')}$body=${message}`}>
+                            <button type='button' className="primaryButton">
+                                Send Message
+                            </button>
+                        </a>
+                    </form>
                 </main>
             )}
         </div>

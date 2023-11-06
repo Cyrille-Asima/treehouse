@@ -380,15 +380,21 @@ button {
 
 .exploreCategoryImg {
   min-height: 115px;
-  height: 15vw;
+  height: 25em;
   width: 100%;
   border-radius: 1.5rem;
   object-fit: cover;
   margin: 0 auto;
+  transition: transform .3s;
 }
 
+.exploreCategoryImg:hover {
+  transform: scale(1.01);
+}
+
+
 .exploreCategoryName {
-  font-weight: 500;
+  font-weight: 800;
   text-align: left;
 }
 
@@ -417,7 +423,13 @@ button {
   height: 100px;
   border-radius: 1.5rem;
   object-fit: cover;
+  transition: transform .3s;
 }
+
+.categoryListingImg:hover{
+  transform: scale(1.01);
+}
+
 @media (min-width: 1024px) {
   .categoryListingImg {
     width: 19%;
@@ -706,7 +718,7 @@ button {
   font-weight: 600;
 }
 
-.lisitingsList {
+.listingsList {
   padding: 0;
 }
 
